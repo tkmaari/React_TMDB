@@ -7,7 +7,7 @@ TMDB APIを利用して映画情報を取得し、検索結果をReactで表示�
 ## 完成イメージ
 
 ### 検索画面　
-![検索画面のスクリーンショット](images/Seach.png)
+![検索画面のスクリーンショット](images/Search.png)
 
 ### 検索結果画面
 ![検索結果画面のスクリーンショット](images/Results.png)
