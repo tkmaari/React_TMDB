@@ -1,69 +1,100 @@
-# React + TypeScript + Vite
+# React×TMDB 映画検索アプリ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TMDB APIを利用して映画情報を取得し、検索結果をReactで表示します。
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 完成イメージ
 
-## Expanding the ESLint configuration
+### 検索画面　
+![検索画面のスクリーンショット](images/Seach.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 検索結果画面
+![検索結果画面のスクリーンショット](images/Results.png)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## コード解説
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```tsx
+export default function App() {
+  const [query, setQuery] = useState<string>("");
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  const searchMovies = async () => {
+    try {
+      const res = await axios.get<{ results: Movie[] }>(
+        "https://api.themoviedb.org/3/search/movie",
+        {
+          params: {
+            api_key: "YOUR_API_KEY_HERE",
+            query,
+            language: "en-US",
+          },
+        }
+      );
+      setMovies(res.data.results);
+    } catch (error) {
+      console.error("Search error:", error);
+    }
+  };
+}
+```
+---
+
+## 各コードの解説
+
+### 1.入力値の状態管理
+```tsx
+const [query, setQuery] = useState<string>("");
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+・入力フォームの文字列を保持するstate。
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+・query : ユーザーが入力した映画タイトル。
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+・setQuery : queryを更新する関数。
+
+・useState<string>("") : TypeScriptで型を文字列に指定、初期値は空文字。  
+
+### 2.映画リストの状態管理
+```tsx
+const [movies, setMovies] = useState<Movie[]>([]);
 ```
+
+・TMDB APIから取得した映画リストを保持するstate。
+
+・movies : 映画データの配列。
+
+・setMovies : moviesを更新する関数。
+
+・型は Movie[]、初期値は空配列。
+
+### 3.APIへのリクエストパラメータ
+```tsx
+params: {...}
+```
+
+・APIに渡すパラメータ
+
+・api_key：自分のTMDB APIキー（必須）
+
+・query：ユーザーの入力文字列
+
+・language：取得するデータの言語（例: "en-US"）
+
+ ### 4.検索結果の格納
+```tsx
+setMovies(res.data.results);
+```
+
+・APIから返ってきた結果をmoviesにセット。
+
+・Reactが自動的に再レンダリング → 画面に映画リストが表示される。
+ 
+
+
+
+
+
+
