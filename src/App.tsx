@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import instance from "./axios";
 import MovieCard from "./components/MovieCard";
 
 interface Movie {
@@ -15,16 +15,13 @@ export default function App() {
 
   const searchMovies = async () => {
     try {
-      const res = await axios.get<{ results: Movie[] }>(
-        "https://api.themoviedb.org/3/search/movie",
-        {
-          params: {
-            api_key: "a8215981df98496cd6473607d5936619",
-            query,
-            language: "en-US",
-          },
-        }
-      );
+      const res = await instance.get<{ results: Movie[] }>("/search/movie", {
+        params: {
+          api_key: "a8215981df98496cd6473607d5936619",
+          query,
+          language: "en-US",
+        },
+      });
       setMovies(res.data.results);
     } catch (error) {
       console.error("Search error:", error);
@@ -33,7 +30,14 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem", color: "#ffffff" }}>
+      <h1
+        style={{
+          fontSize: "2rem",
+          fontWeight: "bold",
+          marginBottom: "2rem",
+          color: "#ffffff",
+        }}
+      >
         映画検索
       </h1>
 
@@ -43,7 +47,12 @@ export default function App() {
           placeholder="Enter movie title"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          style={{ padding: "0.5rem", borderRadius: "0.25rem", marginRight: "0.5rem", width: "250px" }}
+          style={{
+            padding: "0.5rem",
+            borderRadius: "0.25rem",
+            marginRight: "0.5rem",
+            width: "250px",
+          }}
         />
         <button
           onClick={searchMovies}
@@ -54,14 +63,21 @@ export default function App() {
             color: "white",
             border: "none",
             fontWeight: "bold",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
         >
           Search
         </button>
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "1.5rem",
+        }}
+      >
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
