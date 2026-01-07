@@ -19,7 +19,7 @@ export default function App() {
         params: {
           api_key: "a8215981df98496cd6473607d5936619",
           query,
-          language: "en-US",
+          language: "ja-JP",
         },
       });
       setMovies(res.data.results);
@@ -44,7 +44,7 @@ export default function App() {
       <div style={{ marginBottom: "2rem", display: "flex" }}>
         <input
           type="text"
-          placeholder="Enter movie title"
+          placeholder="映画のタイトルを入力して下さい"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           style={{
@@ -66,7 +66,7 @@ export default function App() {
             cursor: "pointer",
           }}
         >
-          Search
+          検索
         </button>
       </div>
 
