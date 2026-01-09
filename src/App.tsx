@@ -15,13 +15,17 @@ export default function App() {
 
   const searchMovies = async () => {
     try {
+      const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY as string;
+      const DEFAULT_LANG = import.meta.env.VITE_DEFAULT_LANGUAGE || "ja-JP";
+
       const res = await instance.get<{ results: Movie[] }>("/search/movie", {
         params: {
-          api_key: "a8215981df98496cd6473607d5936619",
+          api_key: TMDB_API_KEY,
           query,
-          language: "ja-JP",
+          language: DEFAULT_LANG,
         },
       });
+
       setMovies(res.data.results);
     } catch (error) {
       console.error("Search error:", error);
